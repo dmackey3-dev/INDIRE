@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Triple Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: auto;
+      margin: 10px;
+    }
+
+    td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: center;
+    }
+
+    /* Theme-aware colors */
+    .label, .time {
+      font-weight: bold;
+    }
+    @media (prefers-color-scheme: light) {
+      .label, .time { color: black; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .label, .time { color: white; }
+    }
+
+    .buttons {
+      margin-top: 5px;
+    }
+
+    .buttons button {
+      font-size: 12px;
+      width: 32px;
+      height: 24px;
+      margin: 0 2px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <tr>
+      <td class="label">Ingestion</td>
+      <td>
+        <div class="time" id="time1">00:00:00</div>
+        <div class="buttons">
+          <button onclick="start(1)">▶</button>
+          <button onclick="stop(1)">■</button>
+          <button onclick="reset(1)">↺</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">Digestion</td>
+      <td>
+        <div class="time" id="time2">00:00:00</div>
+        <div class="buttons">
+          <button onclick="start(2)">▶</button>
+          <button onclick="stop(2)">■</button>
+          <button onclick="reset(2)">↺</button>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">Reflection</td>
+      <td>
+        <div class="time" id="time3">00:00:00</div>
+        <div class="buttons">
+          <button onclick="start(3)">▶</button>
+          <button onclick="stop(3)">■</button>
+          <button onclick="reset(3)">↺</button>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    const timers = {
+      1: { interval: null, elapsed: 0 },
+      2: { interval: null, elapsed: 0 },
+      3: { interval: null, elapsed: 0 },
+    };
+
+    function updateDisplay(id) {
+      const time = timers[id].elapsed;
+      const hours = String(Math.floor(time / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
+      const seconds = String(time % 60).padStart(2, '0');
+      document.getElementById(`time${id}`).textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    function start(id) {
+      if (timers[id].interval) return;
+      timers[id].interval = setInterval(() => {
+        timers[id].elapsed++;
+        updateDisplay(id);
+      }, 1000);
+    }
+
+    function stop(id) {
+      clearInterval(timers[id].interval);
+      timers[id].interval = null;
+    }
+
+    function reset(id) {
+      stop(id);
+      timers[id].elapsed = 0;
+      updateDisplay(id);
+    }
+  </script>
+</body>
+</html>
