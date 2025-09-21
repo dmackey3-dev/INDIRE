@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Triple Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 4px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      margin: 2px 0;
+    }
+
+    .label {
+      width: 70px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .time {
+      width: 65px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Theme-aware colors */
+    @media (prefers-color-scheme: light) {
+      .label, .time { color: black; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .label, .time { color: white; }
+      body { background-color: #121212; }
+    }
+
+    button {
+      width: 20px;
+      height: 20px;
+      font-size: 10px;
+      margin-left: 2px;
+      padding: 0;
+      cursor: pointer;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <div class="label">Ingestion</div>
+    <div class="time" id="time1">00:00:00</div>
+    <button onclick="start(1)">▶</button>
+    <button onclick="stop(1)">■</button>
+    <button onclick="reset(1)">↺</button>
+  </div>
+
+  <div class="row">
+    <div class="label">Digestion</div>
+    <div class="time" id="time2">00:00:00</div>
+    <button onclick="start(2)">▶</button>
+    <button onclick="stop(2)">■</button>
+    <button onclick="reset(2)">↺</button>
+  </div>
+
+  <div class="row">
+    <div class="label">Reflection</div>
+    <div class="time" id="time3">00:00:00</div>
+    <button onclick="start(3)">▶</button>
+    <button onclick="stop(3)">■</button>
+    <button onclick="reset(3)">↺</button>
+  </div>
+
+  <script>
+    const timers = {
+      1: { interval: null, elapsed: 0 },
+      2: { interval: null, elapsed: 0 },
+      3: { interval: null, elapsed: 0 }
+    };
+
+    function formatTime(totalSeconds) {
+      const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const s = String(totalSeconds % 60).padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    }
+
+    function updateDisplay(id) {
+      document.getElementById(`time${id}`).textContent = formatTime(timers[id].elapsed);
+    }
+
+    function start(id) {
+      if (timers[id].interval) return;
+      timers[id].interval = setInterval(() => {
+        timers[id].elapsed++;
+        updateDisplay(id);
+      }, 1000);
+    }
+
+    function stop(id) {
+      clearInterval(timers[id].interval);
+      timers[id].interval = null;
+    }
+
+    function reset(id) {
+      stop(id);
+      timers[id].elapsed = 0;
+      updateDisplay(id);
+    }
+  </script>
+</body>
+</html>
