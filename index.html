@@ -17,23 +17,29 @@
       margin: 6px;
     }
 
-    .row {
-      display: flex;
-      align-items: center;
-      margin: 3px 0;
+    table {
+      border-collapse: collapse;
+    }
+
+    td {
+      border: 1px solid #000;
+      padding: 4px 6px;
+      text-align: center;
+      vertical-align: middle;
     }
 
     .label {
-      width: 80px;
       font-weight: bold;
       font-size: 12px;
+      text-align: left;
     }
 
     .time {
+      display: inline-block;
       width: 70px;
-      text-align: center;
       font-size: 12px;
       font-weight: bold;
+      text-align: center;
     }
 
     /* Theme-aware colors */
@@ -43,23 +49,22 @@
     @media (prefers-color-scheme: dark) {
       .label, .time { color: white; }
       body { background-color: #121212; }
+      td { border-color: #666; }
     }
 
     button {
-      all: unset; /* remove browser default button styling */
+      all: unset;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 22px;
       height: 22px;
       font-size: 12px;
-      margin-left: 4px;
+      margin-left: 3px;
       background: #fff;
       border: 1px solid #000;
       border-radius: 3px;
       cursor: pointer;
-      text-align: center;
-      line-height: 1;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -72,29 +77,35 @@
   </style>
 </head>
 <body>
-  <div class="row">
-    <div class="label">Ingestion</div>
-    <div class="time" id="time1">00:00:00</div>
-    <button onclick="start(1)">▶</button>
-    <button onclick="stop(1)">■</button>
-    <button onclick="reset(1)">↺</button>
-  </div>
-
-  <div class="row">
-    <div class="label">Digestion</div>
-    <div class="time" id="time2">00:00:00</div>
-    <button onclick="start(2)">▶</button>
-    <button onclick="stop(2)">■</button>
-    <button onclick="reset(2)">↺</button>
-  </div>
-
-  <div class="row">
-    <div class="label">Reflection</div>
-    <div class="time" id="time3">00:00:00</div>
-    <button onclick="start(3)">▶</button>
-    <button onclick="stop(3)">■</button>
-    <button onclick="reset(3)">↺</button>
-  </div>
+  <table>
+    <tr>
+      <td class="label">Ingestion</td>
+      <td>
+        <span class="time" id="time1">00:00:00</span>
+        <button onclick="start(1)">▶</button>
+        <button onclick="stop(1)">■</button>
+        <button onclick="reset(1)">↺</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">Digestion</td>
+      <td>
+        <span class="time" id="time2">00:00:00</span>
+        <button onclick="start(2)">▶</button>
+        <button onclick="stop(2)">■</button>
+        <button onclick="reset(2)">↺</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">Reflection</td>
+      <td>
+        <span class="time" id="time3">00:00:00</span>
+        <button onclick="start(3)">▶</button>
+        <button onclick="stop(3)">■</button>
+        <button onclick="reset(3)">↺</button>
+      </td>
+    </tr>
+  </table>
 
   <script>
     const timers = {
