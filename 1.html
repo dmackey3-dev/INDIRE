@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Triple Stopwatch</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 350px;
+    }
+
+    td {
+      border: 1px solid #888;
+      padding: 6px;
+      vertical-align: middle;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .stopwatch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .time {
+      min-width: 70px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .buttons button {
+      font-size: 12px;
+      width: 28px;
+      height: 22px;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    /* Theme support */
+    @media (prefers-color-scheme: light) {
+      body, .label, .time {
+        color: black;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body, .label, .time {
+        color: white;
+      }
+      table td {
+        border-color: #aaa;
+      }
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <tr>
+      <td class="label">Ingestion</td>
+      <td>
+        <div class="stopwatch">
+          <span class="time">00:00:00</span>
+          <div class="buttons">
+            <button class="start">▶</button>
+            <button class="stop">■</button>
+            <button class="reset">↺</button>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">Digestion</td>
+      <td>
+        <div class="stopwatch">
+          <span class="time">00:00:00</span>
+          <div class="buttons">
+            <button class="start">▶</button>
+            <button class="stop">■</button>
+            <button class="reset">↺</button>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="label">Reflection</td>
+      <td>
+        <div class="stopwatch">
+          <span class="time">00:00:00</span>
+          <div class="buttons">
+            <button class="start">▶</button>
+            <button class="stop">■</button>
+            <button class="reset">↺</button>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    class Stopwatch {
+      constructor(container) {
+        this.timeEl = container.querySelector('.time');
+        this.startBtn = container.querySelector('.start');
+        this.stopBtn = container.querySelector('.stop');
+        this.resetBtn = container.querySelector('.reset');
+        this.interval = null;
+        this.startTime = 0;
+        this.elapsed = 0;
+
+        this.startBtn.addEventListener('click', () => this.start());
+        this.stopBtn.addEventListener('click', () => this.stop());
+        this.resetBtn.addEventListener('click', () => this.reset());
+      }
+
+      format(ms) {
+        let totalSeconds = Math.floor(ms / 1000);
+        let hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        let minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        let seconds = String(totalSeconds % 60).padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+      }
+
+      update() {
+        const now = Date.now();
+        const diff = this.elapsed + (now - this.startTime);
+        this.timeEl.textContent = this.format(diff);
+      }
+
+      start() {
+        if (this.interval) return;
+        this.startTime = Date.now();
+        this.interval = setInterval(() => this.update(), 500);
+      }
+
+      stop() {
+        if (!this.interval) return;
+        clearInterval(this.interval);
+        this.interval = null;
+        this.elapsed += Date.now() - this.startTime;
+        this.timeEl.textContent = this.format(this.elapsed);
+      }
+
+      reset() {
+        clearInterval(this.interval);
+        this.interval = null;
+        this.elapsed = 0;
+        this.startTime = 0;
+        this.timeEl.textContent = "00:00:00";
+      }
+    }
+
+    document.querySelectorAll('.stopwatch').forEach(sw => new Stopwatch(sw));
+  </script>
+</body>
+</html>
